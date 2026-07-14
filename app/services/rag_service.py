@@ -7,9 +7,9 @@ from langchain_core.documents import Document
 from langchain_core.retrievers import BaseRetriever
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage, AIMessage
-from langchain.chains import create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain.chains.history_aware_retriever import create_history_aware_retriever
+from langchain_classic.chains import create_retrieval_chain
+from langchain_classic.chains.combine_documents import create_stuff_documents_chain
+from langchain_classic.chains.history_aware_retriever import create_history_aware_retriever
 from pydantic import Field
 
 from sqlalchemy.orm import Session, joinedload
@@ -486,8 +486,11 @@ def _build_rag_chain(db: Session, user: User):
         "INSTRUCTIONS:\n"
         "- Answer the user's questions truthfully and clearly based ONLY on the "
         "provided database context above.\n"
+        "- For all counts and statistics, use the pre-computed statistics "
+        "section only. Do not count manually from individual ticket details.\n"
         "- When asked to count tickets, count EVERY ticket in the context that "
-        "matches the criteria. Do NOT miss any.\n"
+        "matches the criteria. Do NOT miss any. check with the statistics too, if they match. "
+        "if they dont match, return the data from statistics\n"
         "- SLA Status field tells you if a ticket has breached its SLA ('Breached') "
         "or not ('Within SLA').\n"
         "- Respect their user role '{user_role}'. If the context is empty, politely "

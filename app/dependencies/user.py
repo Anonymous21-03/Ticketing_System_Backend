@@ -12,7 +12,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     if safe_get(f"blocklist:{token}"):
-        raise SessionException("Token has been revoked")
+        raise SessionException("Session Expired")
         
     try:
         username = verify_access_token(token)

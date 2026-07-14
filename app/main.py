@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import time
@@ -13,6 +14,7 @@ from app.core.exceptions import (
     NotFoundException, AlreadyExistsException, UnauthorizedException,
     SessionException, MissingCredentialException, ValidationException,
 )
+from app.core.websocket import redis_pubsub_listener
 
 app = FastAPI(
     title="Ticketing System API",
@@ -22,8 +24,6 @@ app = FastAPI(
 
 @app.on_event("startup")
 async def startup_event():
-    import asyncio
-    from app.core.websocket import redis_pubsub_listener
     asyncio.create_task(redis_pubsub_listener())
 
 
